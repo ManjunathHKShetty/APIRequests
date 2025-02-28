@@ -38,7 +38,6 @@ def test_post_user(apis):
     assert json_data['name'] == "John Automation"
     print("POST USER IS DONE.....")
 
-@allure.severity(allure.severity_level.NORMAL)
 @pytest.fixture(scope="module")
 def user_id(apis):
     user_data = {
@@ -66,6 +65,7 @@ def test_put_user(apis, user_id):
     print("json PUT response body:", json_str)
     assert json_data["id"] == user_id
     assert json_data["name"] == "John Automation Labs"
+    assert json_data["gender"] == "male"
     print("UPDATE USER IS DONE.....")
     print("....=====================....")
 
@@ -74,3 +74,4 @@ def test_delete_user(apis, user_id):
     response = apis.delete(f"/public/v2/users/{user_id}")
     assert response.status_code == 204
     print("DELETE USER IS DONE.....")
+    print("END OF API TESTING")
