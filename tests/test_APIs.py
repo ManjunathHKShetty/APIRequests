@@ -1,57 +1,83 @@
-import json
 import pytest
 import allure
-from utils.apis import APIs
+from apis import APIs
 from utils.logger import LogGen
-from utils.libs import Libs
+from tests.helpers import Helpers
+from utils.string_utils import generate_random_email
 
 logger = LogGen.loggen()
 
 @pytest.fixture(scope="module")
 def apis(auth_token):
+    logger.info("Creating APIs instance")
     return APIs(auth_token)
 
 @pytest.fixture(scope="module")
 def user_id(apis):
-    return Libs.post_user(apis)[0]
+    logger.info("Fixture Auth Token & User ID")
+    user_id, _ = Helpers.post_user(apis)
+    return user_id
 
-@allure.severity(allure.severity_level.NORMAL)
+@pytest.mark.api
+@allure.severity(allure.severity_level.CRITICAL)
 def test_get_users(apis):
-    logger.info("GETTING USERS......")
-    json_str = Libs.get_users(apis)
+    logger.info("Getting users......")
+    json_str = Helpers.get_users(apis)
     logger.info(f"json GET response body: {json_str}")
-    logger.info("GET USER IS DONE.....")
+    logger.info("Get user is done.....")
 
+@pytest.mark.high
+@pytest.mark.api
+@pytest.mark.parametrize(
+    "user_data",
+    [
+        {"name": "John Automation Labs", "email": generate_random_email(), "gender": "male", "status": "active"}
+    ],
+)
 @allure.severity(allure.severity_level.NORMAL)
-def test_post_user(apis):
-    logger.info("ADDING THE USER......")
-    user_id, json_str = Libs.post_user(apis)
+def test_post_user(apis, user_data):
+    logger.info(f"Adding the user: {user_data}......")
+    user_id, json_str = Helpers.post_user(apis, user_data)
     logger.info(f"user id ===>> {user_id}")
     logger.info(f"json POST response body: {json_str}")
-    logger.info("POST USER IS DONE.....")
+    logger.info("Post user is done.....")
 
+@pytest.mark.high
+@pytest.mark.api
+@pytest.mark.parametrize(
+    "user_data",
+    [
+        {"name": "John API Automation Labs", "email": generate_random_email(), "gender": "male", "status": "inactive"}
+    ],
+)
 @allure.severity(allure.severity_level.NORMAL)
-def test_put_user(apis, user_id):
-    logger.info("UPDATING THE USER......")
-    json_str = Libs.put_user(apis, user_id)
+def test_put_user(apis, user_id, user_data):
+    logger.info(f"Updating the user: {user_data}......")
+    json_str = Helpers.put_user(apis, user_id, user_data)
     logger.info(f"json PUT response body: {json_str}")
-    logger.info("UPDATE USER IS DONE.....")
+    logger.info("Update user is done.....")
 
+@pytest.mark.high
+@pytest.mark.api
 @allure.severity(allure.severity_level.NORMAL)
 def test_delete_user(apis, user_id):
-    logger.info("DELETING THE USER.....")
-    Libs.delete_user(apis, user_id)
-    logger.info("DELETE USER IS DONE.....")
-    logger.info("END OF API TESTING")
+    logger.info("Deleting the user.....")
+    Helpers.delete_user(apis, user_id)
+    logger.info("Delete user is done.....")
+    logger.info("End of API Testing")
 
-@allure.severity(allure.severity_level.NORMAL)
+@pytest.mark.low
+@pytest.mark.file
+@allure.severity(allure.severity_level.MINOR)
 def test_upload_file(apis):
-    logger.info("UPLOADING THE FILE.......")
-    Libs.upload_file(apis)
-    logger.info("SUCCESSFULLY UPLOADED FILE")
+    logger.info("Uploading the file.......")
+    Helpers.upload_file(apis)
+    logger.info("Successfully uploaded the file")
 
-@allure.severity(allure.severity_level.NORMAL)
+@pytest.mark.low
+@pytest.mark.file
+@allure.severity(allure.severity_level.MINOR)
 def test_download_file(apis):
-    logger.info("DOWNLOADING THE FILE.......")
-    Libs.download_file(apis)
-    logger.info("SUCCESSFULLY DOWNLOADED FILE")
+    logger.info("Downloading the file.......")
+    Helpers.download_file(apis)
+    logger.info("Successfully downloaded the file")

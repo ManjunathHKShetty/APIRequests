@@ -2,7 +2,6 @@ import requests
 import constants
 
 
-
 def api_get(auth_token, endpoint):
     headers = {"Authorization": auth_token, "Content-Type": "application/json"}
     url = f"{constants.BASE_URL}/{endpoint}"

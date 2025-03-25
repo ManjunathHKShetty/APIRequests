@@ -1,4 +1,4 @@
-from utils.helpers import (api_get, api_post, api_put, api_delete, api_file_upload, api_file_download)
+from libs import (api_get, api_post, api_put, api_delete, api_file_upload, api_file_download)
 
 class APIs:
     def __init__(self, auth_token):
