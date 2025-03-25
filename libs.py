@@ -25,7 +25,6 @@ def api_delete(auth_token, endpoint):
     return response
 
 
-@staticmethod
 def api_file_upload():
     url = constants.UPLOAD_URL
     file_path = r"C:\Users\Ifomet\Desktop\students.json"
@@ -34,7 +33,6 @@ def api_file_upload():
         response = requests.post(url, files=files)
     return response
 
-@staticmethod
 def api_file_download():
     url = constants.DOWNLOAD_URL
     file_path_d = r"C:\Users\Ifomet\Desktop\downloaded_file.bin"

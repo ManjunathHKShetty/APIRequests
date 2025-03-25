@@ -15,7 +15,8 @@ def apis(auth_token):
 @pytest.fixture(scope="module")
 def user_id(apis):
     logger.info("Fixture Auth Token & User ID")
-    user_id, _ = Helpers.post_user(apis)
+    response = Helpers.post_user(apis)
+    user_id = response[0]
     return user_id
 
 @pytest.mark.api
