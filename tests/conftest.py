@@ -1,6 +1,5 @@
 import pytest
 import configparser
-import os
 from datetime import datetime
 
 @pytest.hookimpl(tryfirst=True)
@@ -14,4 +13,4 @@ config.read("config.ini")
 
 @pytest.fixture(scope='session',autouse=True)
 def auth_token():
-    return config.get("Auth", "bearer_token", fallback=os.getenv("AUTH_TOKEN", "default_token"))
+    return config.get("Auth", "bearer_token")
