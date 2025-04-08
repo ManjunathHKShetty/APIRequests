@@ -4,6 +4,7 @@ from utils.logger import LogGen
 from tests.helpers import Helpers
 from utils.string_utils import generate_random_email
 
+
 logger = LogGen.loggen()
 
 
@@ -39,7 +40,8 @@ def test_post_user(apis, user_data):
 @pytest.mark.parametrize(
     "user_data",
     [
-        {"name": "John API Automation Labs", "email": generate_random_email(), "gender": "male", "status": "inactive"}
+        {"name": "John API Automation Labs", "email": generate_random_email(), "gender": "male", "status": "inactive"},
+        {"name": "John API Automation Labs", "email": generate_random_email(), "gender": "female", "status": "active"}
     ],
 )
 @allure.severity(allure.severity_level.NORMAL)
