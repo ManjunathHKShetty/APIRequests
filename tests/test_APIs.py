@@ -1,5 +1,6 @@
 import pytest
 import allure
+from libs import api_cookies
 from utils.logger import LogGen
 from tests.helpers import Helpers
 from utils.string_utils import generate_random_email
@@ -75,6 +76,23 @@ def test_upload_file(apis):
 @pytest.mark.file
 @allure.severity(allure.severity_level.MINOR)
 def test_download_file(apis):
-    logger.info("Downloading the file.......")
-    Helpers.download_file(apis)
-    logger.info("Successfully downloaded the file")
+    try:
+        logger.info("Downloading the file...")
+        Helpers.download_file(apis)
+        logger.info("File downloaded successfully.")
+    except AssertionError as ae:
+        logger.error(f"Assertion failed during file download: {ae}")
+        pytest.fail(f"Test failed due to assertion error: {ae}")
+    except Exception as e:
+        logger.exception("Unexpected error during file download.")
+        pytest.fail(f"Test failed due to unexpected error: {e}")
+
+
+@pytest.mark.high
+@pytest.mark.api
+@pytest.mark.parametrize("cookies", [{"location": "New York"}])
+@allure.severity(allure.severity_level.MINOR)
+def test_cookie(cookies):
+    logger.info("Getting Cookies...")
+    Helpers.get_cookies(api_cookies, cookies)
+    logger.info("Successfully generated the cookies")

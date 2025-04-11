@@ -44,3 +44,10 @@ def api_file_download():
         return file_path_d, response
     else:
         raise ValueError(f"Download failed: {response.status_code}")
+
+def api_cookies(cookies):
+    headers = {"Content-Type": "application/json"}
+    url = constants.COOKIE_URL
+    response = requests.get(url, cookies=cookies, headers=headers)
+    print(response.text)
+    return response

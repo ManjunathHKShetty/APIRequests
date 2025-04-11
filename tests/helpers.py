@@ -54,3 +54,11 @@ class Helpers:
         file_path, response = apis.file_download()
         assert response.status_code == 200
         assert os.path.exists(file_path), "Downloaded file does not exist!"
+
+    @staticmethod
+    def get_cookies(apis, cookies):
+        response = apis(cookies)
+        assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+        json_data = response.json()
+        return json.dumps(json_data, indent=4)
+
