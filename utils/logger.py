@@ -5,7 +5,7 @@ import logging
 class LogGen:
     @staticmethod
     def loggen():
-        log_dir = os.path.join(os.getcwd(), "Logs")
+        log_dir = os.path.join(os.getcwd(), "tests", "Logs")
 
         # Ensure the directory exists
         if not os.path.exists(log_dir):

@@ -1,0 +1,64 @@
+import json
+import os
+from utils.string_utils import generate_random_email
+
+
+class Helpers:
+    @staticmethod
+    def get_users(apis):
+        response = apis.get("/public/v2/users")
+        assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+        json_data = response.json()
+        return json.dumps(json_data, indent=4)
+
+    @staticmethod
+    def post_user(apis, user_data=None):
+        if user_data is None:
+            user_data = Helpers._generate_user_data()
+        response = apis.post("/public/v2/users/", user_data)
+        assert response.status_code == 201, f"Expected 201, got {response.status_code}"
+        json_data = response.json()
+        assert "id" in json_data, "User ID not found in response"
+        user_id = json_data["id"]
+        return user_id, json.dumps(json_data, indent=4)
+
+    @staticmethod
+    def put_user(apis, user_id, user_data):
+        response = apis.put(f"/public/v2/users/{user_id}", user_data)
+        assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+        json_data = response.json()
+        assert json_data["id"] == user_id, f"Expected ID to be '{user_id}', but got '{json_data['id']}'"
+        return json.dumps(json_data, indent=4)
+
+    @staticmethod
+    def delete_user(apis, user_id):
+        response = apis.delete(f"/public/v2/users/{user_id}")
+        assert response.status_code == 204, f"Expected 204, got {response.status_code}"
+
+    @staticmethod
+    def _generate_user_data(name="John Automation", email=None, gender="male", status="active"):
+        return {
+            "name": name,
+            "email": email if email else generate_random_email(),
+            "gender": gender,
+            "status": status
+        }
+
+    @staticmethod
+    def upload_file(apis):
+        response = apis.file_upload()
+        assert response and response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+
+    @staticmethod
+    def download_file(apis):
+        file_path, response = apis.file_download()
+        assert response.status_code == 200
+        assert os.path.exists(file_path), "Downloaded file does not exist!"
+
+    @staticmethod
+    def get_cookies(apis, cookies):
+        response = apis(cookies)
+        assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+        json_data = response.json()
+        return json.dumps(json_data, indent=4)
+
